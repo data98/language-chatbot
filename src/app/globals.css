@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #111827;
+
+  /* Brand Colors */
+  --brand-lime: #D4FF00;
+  --brand-peach: #FF8C42;
+  --brand-dark: #111827;
+  --brand-gray: #F3F4F6;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-brand-lime: var(--brand-lime);
+  --color-brand-peach: var(--brand-peach);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-gray: var(--brand-gray);
+
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+
+  /* Extend spacing if needed */
+  --spacing-18: 4.5rem;
+}
+
+body {
+  background: var(--brand-gray);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
