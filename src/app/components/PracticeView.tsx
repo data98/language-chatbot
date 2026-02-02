@@ -100,23 +100,23 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
                 </button>
             </div>
 
-            <div className="flex-1 lg:grid lg:grid-cols-2 lg:gap-10 lg:items-start lg:space-y-0 space-y-8">
+            <div className="flex-1 lg:grid lg:grid-cols-2 lg:gap-10 items-stretch lg:overflow-hidden">
                 {/* Left Column (Desktop): Current Task & Input */}
-                <div className="space-y-4 lg:sticky lg:top-4">
+                <div className="flex flex-col space-y-4 mb-8 lg:mb-0">
                     <div className="bg-brand-dark rounded-3xl p-6 md:p-8 text-white relative shadow-lg shadow-brand-lime/10">
                         <span className="absolute top-6 right-6 flex h-3 w-3">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-lime opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-3 w-3 bg-brand-lime"></span>
                         </span>
                         <span className="text-brand-lime text-xs font-bold uppercase tracking-wider mb-2 block">Your Turn</span>
-                        <p className="text-2xl md:text-3xl font-bold leading-tight">{session.currentPrompt}</p>
+                        <p className="text-xl md:text-2xl font-bold leading-tight line-clamp-4 lg:line-clamp-none">{session.currentPrompt}</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="relative">
+                    <form onSubmit={handleSubmit} className="relative flex-1 flex flex-col min-h-[200px] lg:min-h-0">
                         <textarea
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            className="w-full bg-gray-100 rounded-3xl p-6 pb-20 text-lg font-medium text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-dark focus:bg-white transition-all resize-none min-h-[100px] lg:min-h-[100px] max-h-[150px] lg:max-h-[150px]"
+                            className="w-full flex-1 bg-gray-100 rounded-3xl p-6 pb-20 text-lg font-medium text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-dark focus:bg-white transition-all resize-none overflow-y-auto"
                             placeholder={`Type your answer in ${session.targetLanguage}...`}
                             disabled={loading}
                             onKeyDown={(e) => {
@@ -142,31 +142,31 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
                 </div>
 
                 {/* Right Column (Desktop): Feedback & History */}
-                <div className="space-y-8 lg:h-[600px]">
+                <div className="flex flex-col space-y-6 lg:overflow-hidden min-h-0">
                     {session.lastFeedback && session.lastAnswer && session.lastFeedback.corrected !== 'N/A' ? (
-                        <div className="animate-fade-in bg-gray-50 rounded-3xl p-6 md:p-8 space-y-5 border border-gray-100 shadow-sm relative overflow-hidden">
+                        <div className="flex-shrink-0 animate-fade-in bg-gray-50 rounded-3xl p-6 space-y-4 border border-gray-100 shadow-sm relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-2 h-full bg-brand-lime"></div>
 
                             <div className="space-y-1">
                                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">You said</span>
-                                <p className="text-lg text-gray-600">{session.lastAnswer}</p>
+                                <p className="text-base text-gray-600 lg:line-clamp-2">{session.lastAnswer}</p>
                             </div>
 
                             <div className="space-y-1">
                                 <span className="text-xs font-bold text-brand-lime uppercase tracking-wide bg-black px-2 py-0.5 rounded-md">Correction</span>
-                                <p className="text-lg font-bold text-gray-900">{session.lastFeedback.corrected}</p>
+                                <p className="text-lg font-bold text-gray-900 lg:line-clamp-2">{session.lastFeedback.corrected}</p>
                             </div>
 
-                            <div className="bg-white rounded-2xl p-4 text-sm text-gray-600 leading-relaxed">
+                            <div className="bg-white rounded-2xl p-4 text-sm text-gray-600 leading-relaxed lg:overflow-y-auto lg:max-h-32 scrollbar-thin scrollbar-thumb-gray-200">
                                 <span className="font-bold text-gray-900">Explanation:</span> {session.lastFeedback.explanation}
                             </div>
 
-                            {session.lastFeedback.alternatives?.length > 0 && (
+                            {session.lastFeedback.alternatives && session.lastFeedback.alternatives.length > 0 && (
                                 <div className="space-y-2">
-                                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">Try saying</span>
-                                    <div className="flex flex-wrap gap-2">
+                                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">Alternatives</span>
+                                    <div className="flex flex-wrap overflow-x-auto pb-1 gap-2 scrollbar-hide">
                                         {session.lastFeedback.alternatives.map((alt, i) => (
-                                            <span key={i} className="px-3 py-1.5 bg-brand-lime/20 text-brand-dark text-sm font-medium rounded-lg border border-brand-lime/30">
+                                            <span key={i} className="flex-shrink-0 px-3 py-1 bg-brand-lime/20 text-brand-dark text-xs font-medium rounded-lg border border-brand-lime/30 whitespace-nowrap">
                                                 {alt}
                                             </span>
                                         ))}
@@ -176,20 +176,19 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
                         </div>
                     ) : (
                         /* Placeholder for empty state on desktop spread */
-                        <div className="hidden lg:flex h-full items-center justify-center bg-gray-50 rounded-3xl border border-dashed border-gray-200 text-gray-400 font-medium p-8 text-center">
-                            Your feedback and corrections will appear here after you submit an answer.
+                        <div className="hidden lg:flex flex-shrink-0 items-center justify-center bg-gray-50 rounded-3xl border border-dashed border-gray-200 text-gray-400 font-medium p-8 text-center">
+                            Feedback will appear here.
                         </div>
                     )}
 
                     {/* History Visuals */}
                     {session.history.length > 0 && (
-                        <div className="lg:border-t-0 border-t border-gray-100 pt-6 lg:pt-0">
-                            <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-4 text-center lg:text-left">Previous entries</p>
-                            {/* Vertical list on Desktop, Horizontal on Mobile */}
-                            <div className="flex lg:flex-col gap-3 overflow-x-auto- lg:overflow-visible- pb-2 lg:pb-0 scrollbar-hide- lg:opacity-100 opacity-80 transition-opacity h-[150px] lg:overflow-y-auto lg:pr-4 lg:scrollbar-thin lg:scrollbar-thumb-gray-200">
+                        <div className="flex-1 flex flex-col min-h-0 border-t border-gray-100 pt-4">
+                            <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 text-center lg:text-left">Previous entries</p>
+                            <div className="lg:flex-1 lg:overflow-y-auto pr-2 space-y-3 lg:scrollbar-thin lg:scrollbar-thumb-gray-200">
                                 {session.history.map((item, idx) => (
-                                    <div key={idx} className="flex-shrink-0 w-64 lg:w-full bg-gray-50 rounded-2xl p-4 text-xs border border-gray-100 hover:bg-white transition-colors cursor-default">
-                                        <p className="text-gray-500 line-clamp-2 mb-1">{item.prompt}</p>
+                                    <div key={idx} className="bg-gray-50 rounded-2xl p-4 text-xs border border-gray-100 hover:bg-white transition-colors cursor-default">
+                                        <p className="text-gray-500 line-clamp-1 mb-1">{item.prompt}</p>
                                         <p className="font-bold text-gray-900 line-clamp-2">{item.corrected}</p>
                                     </div>
                                 ))}
