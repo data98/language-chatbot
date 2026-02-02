@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Session, Feedback, HistoryItem } from '@/lib/types';
+import HistoryModal from './HistoryModal';
+import ResetModal from './ResetModal';
 
 interface PracticeViewProps {
     session: Session;
@@ -213,89 +215,17 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
                 <div ref={scrollRef} />
             </div>
 
-            {/* History Modal */}
-            {isHistoryOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div
-                        className="absolute inset-0 bg-brand-dark/60 backdrop-blur-sm"
-                        onClick={() => setIsHistoryOpen(false)}
-                    />
-                    <div className="relative w-full max-w-2xl bg-white rounded-4xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] animate-in fade-in zoom-in duration-200">
-                        <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-brand-gray/50">
-                            <div>
-                                <h3 className="text-xl font-bold text-brand-dark">Session History</h3>
-                                <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">All previous entries</p>
-                            </div>
-                            <button
-                                onClick={() => setIsHistoryOpen(false)}
-                                className="cursor-pointer p-2 hover:bg-gray-200 rounded-full transition-colors"
-                            >
-                                <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                            </button>
-                        </div>
-                        <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-gray-200">
-                            {session.history.map((item, idx) => (
-                                <div key={idx} className="bg-gray-50 rounded-3xl p-6 border border-gray-100 hover:border-brand-lime transition-colors">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className="space-y-1">
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Prompt</span>
-                                            <p className="text-sm text-gray-600 font-medium leading-relaxed">{item.prompt}</p>
-                                        </div>
-                                        <div className="space-y-1">
-                                            <span className="text-[10px] font-bold text-brand-peach uppercase tracking-widest">Correction</span>
-                                            <p className="text-sm text-brand-dark font-bold leading-relaxed">{item.corrected}</p>
-                                        </div>
-                                    </div>
-                                    <div className="mt-3 pt-3 border-t border-gray-100">
-                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Your Answer</span>
-                                        <p className="text-sm text-gray-500 italic">"{item.answer}"</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="p-6 border-t border-gray-100 bg-gray-50 flex justify-end">
-                            <button
-                                onClick={() => setIsHistoryOpen(false)}
-                                className="cursor-pointer px-6 py-2 bg-brand-dark text-white font-bold rounded-full hover:bg-gray-800 transition-colors"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {/* Reset Confirmation Modal */}
-            {showResetModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div
-                        className="absolute inset-0 bg-brand-dark/40 backdrop-blur-[2px]"
-                        onClick={() => setShowResetModal(false)}
-                    />
-                    <div className="relative w-full max-w-sm bg-white rounded-4xl shadow-2xl overflow-hidden p-8 text-center animate-in fade-in zoom-in duration-200">
-                        <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                        </div>
-                        <h3 className="text-2xl font-bold text-brand-dark mb-2">Reset Progress?</h3>
-                        <p className="text-gray-500 mb-8 leading-relaxed">
-                            This will clear your current session and history. This action cannot be undone.
-                        </p>
-                        <div className="flex flex-col gap-3">
-                            <button
-                                onClick={onReset}
-                                className="cursor-pointer w-full py-4 bg-brand-dark text-white font-bold rounded-full hover:bg-gray-800 transition-colors"
-                            >
-                                Yes, Reset Session
-                            </button>
-                            <button
-                                onClick={() => setShowResetModal(false)}
-                                className="cursor-pointer w-full py-3 text-gray-500 font-bold rounded-full hover:bg-gray-100 transition-colors"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <HistoryModal
+                isOpen={isHistoryOpen}
+                onClose={() => setIsHistoryOpen(false)}
+                history={session.history}
+            />
+
+            <ResetModal
+                isOpen={showResetModal}
+                onClose={() => setShowResetModal(false)}
+                onConfirm={onReset}
+            />
         </div>
     );
 }
