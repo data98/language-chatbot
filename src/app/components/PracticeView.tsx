@@ -150,17 +150,31 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
                 <div className="flex flex-col space-y-6 lg:overflow-hidden min-h-0">
                     {session.lastFeedback && session.lastAnswer && session.lastFeedback.corrected !== 'N/A' ? (
                         <div className="flex-shrink-0 animate-fade-in bg-gray-50 rounded-3xl p-6 space-y-4 border border-gray-100 shadow-sm relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-2 h-full bg-brand-lime"></div>
+                            {/* Check if correct */}
+                            {(() => {
+                                const isCorrect = session.lastAnswer.trim().toLowerCase() === session.lastFeedback.corrected.trim().toLowerCase();
+                                return (
+                                    <>
+                                        <div className={`absolute top-0 left-0 w-2 h-full ${isCorrect ? 'bg-green-500' : 'bg-brand-lime'}`}></div>
 
-                            <div className="space-y-1">
-                                <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">You said</span>
-                                <p className="text-base text-gray-600 lg:line-clamp-2">{session.lastAnswer}</p>
-                            </div>
+                                        {!isCorrect && (
+                                            <div className="space-y-1">
+                                                <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">You said</span>
+                                                <p className="text-base text-gray-600 lg:line-clamp-2">{session.lastAnswer}</p>
+                                            </div>
+                                        )}
 
-                            <div className="space-y-1">
-                                <span className="text-xs font-bold text-brand-lime uppercase tracking-wide bg-black px-2 py-0.5 rounded-md">Correction</span>
-                                <p className="text-lg font-bold text-gray-900 lg:line-clamp-2">{session.lastFeedback.corrected}</p>
-                            </div>
+                                        <div className="space-y-1">
+                                            <span className={`text-xs font-bold uppercase tracking-wide px-2 py-0.5 rounded-md ${isCorrect ? 'bg-green-500 text-white' : 'bg-black text-brand-lime'}`}>
+                                                {isCorrect ? 'Perfect!' : 'Correction'}
+                                            </span>
+                                            <p className={`text-lg font-bold lg:line-clamp-2 ${isCorrect ? 'text-green-600' : 'text-gray-900'}`}>
+                                                {session.lastFeedback.corrected}
+                                            </p>
+                                        </div>
+                                    </>
+                                );
+                            })()}
 
                             <div className="bg-white rounded-2xl p-4 text-sm text-gray-600 leading-relaxed lg:overflow-y-auto lg:max-h-32 scrollbar-thin scrollbar-thumb-gray-200">
                                 <span className="font-bold text-gray-900">Explanation:</span> {session.lastFeedback.explanation}
