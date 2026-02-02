@@ -1,6 +1,7 @@
 # Language Coach
 
-Minimal text-only AI language practice app.
+Minimal text-only AI language practice app. 
+You can check out the live demo [here](https://language-chatbot-project.vercel.app/).
 
 ## Stack
 - **Next.js 15+** (App Router)
