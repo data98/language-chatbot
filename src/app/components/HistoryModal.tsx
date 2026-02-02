@@ -33,24 +33,40 @@ export default function HistoryModal({ isOpen, onClose, history }: HistoryModalP
           </button>
         </div>
         <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-gray-200">
-          {history.map((item, idx) => (
-            <div key={idx} className="bg-gray-50 rounded-3xl p-6 border border-gray-100 hover:border-brand-lime transition-colors">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Prompt</span>
-                  <p className="text-sm text-gray-600 font-medium leading-relaxed">{item.prompt}</p>
+          {history.map((item, idx) => {
+            const isCorrect = item.answer.trim().toLowerCase() === item.corrected.trim().toLowerCase();
+            return (
+              <div key={idx} className={`bg-gray-50 rounded-3xl p-6 border transition-colors ${isCorrect ? 'hover:border-green-500 border-green-50' : 'hover:border-brand-lime border-gray-100'}`}>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Entry #{history.length - idx}</span>
+                  <span className={`text-[10px] font-bold px-2 py-1 rounded-lg ${isCorrect ? 'bg-green-500 text-white' : 'bg-black text-brand-lime'}`}>
+                    {isCorrect ? 'Perfect!' : 'Correction'}
+                  </span>
                 </div>
-                <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-brand-peach uppercase tracking-widest">Correction</span>
-                  <p className="text-sm text-brand-dark font-bold leading-relaxed">{item.corrected}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Prompt</span>
+                    <p className="text-sm text-gray-600 font-medium leading-relaxed">{item.prompt}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className={`text-[10px] font-bold uppercase tracking-widest ${isCorrect ? 'text-green-600' : 'text-brand-peach'}`}>
+                      {isCorrect ? 'Your Answer' : 'Correction'}
+                    </span>
+                    <p className={`text-sm font-bold leading-relaxed ${isCorrect ? 'text-green-700' : 'text-brand-dark'}`}>{item.corrected}</p>
+                  </div>
+                </div>
+                {!isCorrect && (
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Your Attempt</span>
+                    <p className="text-sm text-gray-500 italic">"{item.answer}"</p>
+                  </div>
+                )}
+                <div className={`mt-4 p-4 rounded-2xl text-xs leading-relaxed ${isCorrect ? 'bg-green-100/50 text-green-800' : 'bg-white text-gray-600'}`}>
+                  <span className="font-bold">Explanation:</span> {item.explanation}
                 </div>
               </div>
-              <div className="mt-3 pt-3 border-t border-gray-100">
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Your Answer</span>
-                <p className="text-sm text-gray-500 italic">"{item.answer}"</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div className="p-6 border-t border-gray-100 bg-gray-50 flex justify-end">
           <button

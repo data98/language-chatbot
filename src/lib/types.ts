@@ -11,6 +11,7 @@ export interface HistoryItem {
   prompt: string;
   answer: string;
   corrected: string;
+  explanation: string;
 }
 
 export interface Session {

@@ -49,6 +49,7 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
                     prompt: session.currentPrompt,
                     answer: userAnswer,
                     corrected: data.corrected,
+                    explanation: data.explanation,
                 };
                 newHistory = [historyItem, ...newHistory].slice(0, 5); // Keep last 5
             }
@@ -215,12 +216,21 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
                                 )}
                             </div>
                             <div className="lg:flex-1 lg:overflow-y-auto pr-2 space-y-3 lg:scrollbar-thin lg:scrollbar-thumb-gray-200">
-                                {session.history.slice(0, 1).map((item, idx) => (
-                                    <div key={idx} className="bg-gray-50 rounded-2xl p-4 text-xs border border-gray-100 hover:bg-white transition-colors cursor-default">
-                                        <p className="text-gray-500 line-clamp-1 mb-1">{item.prompt}</p>
-                                        <p className="font-bold text-gray-900 line-clamp-2">{item.corrected}</p>
-                                    </div>
-                                ))}
+                                {session.history.slice(0, 1).map((item, idx) => {
+                                    const isCorrect = item.answer.trim().toLowerCase() === item.corrected.trim().toLowerCase();
+                                    return (
+                                        <div key={idx} className="bg-gray-50 rounded-2xl p-4 text-xs border border-gray-100 hover:bg-white transition-colors cursor-default relative overflow-hidden">
+                                            <div className={`absolute top-0 left-0 w-1 h-full ${isCorrect ? 'bg-green-500' : 'bg-brand-lime'}`}></div>
+                                            <div className="flex justify-between items-start mb-2">
+                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">{item.prompt}</p>
+                                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-brand-lime/20 text-brand-dark'}`}>
+                                                    {isCorrect ? 'Perfect!' : 'Correction'}
+                                                </span>
+                                            </div>
+                                            <p className={`font-bold line-clamp-2 ${isCorrect ? 'text-green-700' : 'text-gray-900'}`}>{item.corrected}</p>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}
