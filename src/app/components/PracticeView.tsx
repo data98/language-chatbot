@@ -12,6 +12,7 @@ interface PracticeViewProps {
 export default function PracticeView({ session, onUpdate, onReset }: PracticeViewProps) {
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
     const initialized = useRef(false);
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -102,7 +103,7 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
 
             <div className="flex-1 lg:grid lg:grid-cols-2 lg:gap-10 items-stretch lg:overflow-hidden">
                 {/* Left Column (Desktop): Current Task & Input */}
-                <div className="flex flex-col space-y-4 mb-8 lg:mb-0">
+                <div className="flex flex-col space-y-4 mb-8 lg:mb-0 lg:px-1">
                     <div className="bg-brand-dark rounded-3xl p-6 md:p-8 text-white relative shadow-lg shadow-brand-lime/10">
                         <span className="absolute top-6 right-6 flex h-3 w-3">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-lime opacity-75"></span>
@@ -130,7 +131,7 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
                             <button
                                 type="submit"
                                 disabled={loading || !input.trim()}
-                                className="flex items-center gap-2 bg-brand-lime text-brand-dark px-6 py-3 rounded-full font-bold hover:bg-[#bfff00] disabled:opacity-50 disabled:cursor-not-allowed transition-transform transform active:scale-95 shadow-sm"
+                                className="cursor-pointer flex items-center gap-2 bg-brand-lime text-brand-dark px-6 py-3 rounded-full font-bold hover:bg-[#bfff00] disabled:opacity-50 disabled:cursor-not-allowed transition-transform transform active:scale-95 shadow-sm"
                             >
                                 {loading ? 'Sending...' : 'Send Answer'}
                                 {!loading && (
@@ -184,9 +185,19 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
                     {/* History Visuals */}
                     {session.history.length > 0 && (
                         <div className="flex-1 flex flex-col min-h-0 border-t border-gray-100 pt-4">
-                            <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 text-center lg:text-left">Previous entries</p>
+                            <div className="flex justify-between items-center mb-3">
+                                <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Previous entries</p>
+                                {session.history.length > 1 && (
+                                    <button
+                                        onClick={() => setIsHistoryOpen(true)}
+                                        className="cursor-pointer text-xs font-bold text-brand-lime bg-brand-dark px-2 py-1 rounded-lg hover:bg-gray-800 transition-colors flex items-center gap-1.5"
+                                    >
+                                        <span>+{session.history.length - 1} more</span>
+                                    </button>
+                                )}
+                            </div>
                             <div className="lg:flex-1 lg:overflow-y-auto pr-2 space-y-3 lg:scrollbar-thin lg:scrollbar-thumb-gray-200">
-                                {session.history.map((item, idx) => (
+                                {session.history.slice(0, 1).map((item, idx) => (
                                     <div key={idx} className="bg-gray-50 rounded-2xl p-4 text-xs border border-gray-100 hover:bg-white transition-colors cursor-default">
                                         <p className="text-gray-500 line-clamp-1 mb-1">{item.prompt}</p>
                                         <p className="font-bold text-gray-900 line-clamp-2">{item.corrected}</p>
@@ -199,6 +210,58 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
 
                 <div ref={scrollRef} />
             </div>
+
+            {/* History Modal */}
+            {isHistoryOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div
+                        className="absolute inset-0 bg-brand-dark/60 backdrop-blur-sm"
+                        onClick={() => setIsHistoryOpen(false)}
+                    />
+                    <div className="relative w-full max-w-2xl bg-white rounded-4xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] animate-in fade-in zoom-in duration-200">
+                        <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-brand-gray/50">
+                            <div>
+                                <h3 className="text-xl font-bold text-brand-dark">Session History</h3>
+                                <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">All previous entries</p>
+                            </div>
+                            <button
+                                onClick={() => setIsHistoryOpen(false)}
+                                className="cursor-pointer p-2 hover:bg-gray-200 rounded-full transition-colors"
+                            >
+                                <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-gray-200">
+                            {session.history.map((item, idx) => (
+                                <div key={idx} className="bg-gray-50 rounded-3xl p-6 border border-gray-100 hover:border-brand-lime transition-colors">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-1">
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Prompt</span>
+                                            <p className="text-sm text-gray-600 font-medium leading-relaxed">{item.prompt}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <span className="text-[10px] font-bold text-brand-peach uppercase tracking-widest">Correction</span>
+                                            <p className="text-sm text-brand-dark font-bold leading-relaxed">{item.corrected}</p>
+                                        </div>
+                                    </div>
+                                    <div className="mt-3 pt-3 border-t border-gray-100">
+                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Your Answer</span>
+                                        <p className="text-sm text-gray-500 italic">"{item.answer}"</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="p-6 border-t border-gray-100 bg-gray-50 flex justify-end">
+                            <button
+                                onClick={() => setIsHistoryOpen(false)}
+                                className="cursor-pointer px-6 py-2 bg-brand-dark text-white font-bold rounded-full hover:bg-gray-800 transition-colors"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
