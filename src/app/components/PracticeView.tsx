@@ -183,7 +183,7 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
 
                     {/* History Visuals */}
                     {session.history.length > 0 && (
-                        <div className="lg:border-t-0 border-t border-gray-100">
+                        <div className="lg:border-t-0 border-t border-gray-100 pt-6 lg:pt-0">
                             <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-4 text-center lg:text-left">Previous entries</p>
                             {/* Vertical list on Desktop, Horizontal on Mobile */}
                             <div className="flex lg:flex-col gap-3 overflow-x-auto- lg:overflow-visible- pb-2 lg:pb-0 scrollbar-hide- lg:opacity-100 opacity-80 transition-opacity h-[150px] lg:overflow-y-auto lg:pr-4 lg:scrollbar-thin lg:scrollbar-thumb-gray-200">
