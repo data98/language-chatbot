@@ -26,7 +26,8 @@ export async function POST(request: Request) {
       Difficulty Level: ${difficulty}.
       Scenario: ${scenario}.
 
-      Your goal is to provide immediate feedback on the user's answer and generate the next short practice prompt.
+      Your goal is to provide immediate feedback (if necessary) on the user's answer and generate the next short practice prompt.
+      If the user's answer is correct, provide no feedback and generate the next prompt.
       Output must be valid JSON matching this schema:
       {
       "corrected": "string (the corrected version of the user's answer, or N/A if starting)",
