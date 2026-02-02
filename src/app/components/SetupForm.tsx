@@ -98,7 +98,7 @@ export default function SetupForm({ onStart }: SetupFormProps) {
 
                 <button
                     type="submit"
-                    className="w-full py-3.5 px-6 rounded-full bg-black text-white text-lg font-bold hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 transition-all transform hover:-translate-y-0.5"
+                    className="cursor-pointer w-full py-3.5 px-6 rounded-full bg-black text-white text-lg font-bold hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 transition-all transform hover:-translate-y-0.5"
                 >
                     Start Session
                 </button>

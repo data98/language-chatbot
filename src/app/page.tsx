@@ -30,10 +30,8 @@ export default function Home() {
     };
 
     const handleReset = () => {
-        if (confirm('Are you sure you want to reset your progress? This cannot be undone.')) {
-            clearSession();
-            setSession(null);
-        }
+        clearSession();
+        setSession(null);
     };
 
     if (loading) {
