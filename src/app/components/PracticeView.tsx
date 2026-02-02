@@ -105,13 +105,14 @@ export default function PracticeView({ session, onUpdate, onReset }: PracticeVie
             <div className="flex-1 lg:grid lg:grid-cols-2 lg:gap-10 items-stretch lg:overflow-hidden">
                 {/* Left Column (Desktop): Current Task & Input */}
                 <div className="flex flex-col space-y-4 mb-8 lg:mb-0 lg:px-1">
-                    <div className="bg-brand-dark rounded-3xl p-6 md:p-8 text-white relative shadow-lg shadow-brand-lime/10">
+                    <div className="bg-brand-dark rounded-3xl p-6 md:p-8 text-white relative shadow-lg shadow-brand-lime/10
+                    ">
                         <span className="absolute top-6 right-6 flex h-3 w-3">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-lime opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-3 w-3 bg-brand-lime"></span>
                         </span>
                         <span className="text-brand-lime text-xs font-bold uppercase tracking-wider mb-2 block">Your Turn</span>
-                        <p className="text-xl md:text-2xl font-bold leading-tight line-clamp-4 lg:line-clamp-none">{session.currentPrompt}</p>
+                        <p className="text-xl md:text-2xl font-bold leading-tight">{session.currentPrompt}</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="relative flex-1 flex flex-col min-h-[200px] lg:min-h-0">
